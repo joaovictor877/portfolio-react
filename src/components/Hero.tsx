@@ -80,9 +80,11 @@ export function Hero() {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
               <div className="w-full aspect-square bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
-                <div className="w-full h-full bg-slate-800 m-2 rounded-xl flex items-center justify-center text-8xl">
-                  👨‍💻
-                </div>
+                <img 
+                  src="/images/juca_profssional.jpg" 
+                  alt="João Victor Silva Souza" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
             </div>
