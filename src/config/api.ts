@@ -1,9 +1,12 @@
 // Configuração da API
-export const API_BASE_URL = 'https://joaovictor.app.br';
+// Se estiver em produção, use caminho relativo para usar as APIs locais
+// Se estiver em dev, pode usar o domínio do portfolio original
+const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+export const API_BASE_URL = isProduction ? '' : '';
 
 export const API_ENDPOINTS = {
-  projects: `${API_BASE_URL}/api/projects`,
-  upload: `${API_BASE_URL}/api/upload`,
+  projects: `/api/projects`,
+  upload: `/api/upload`,
 } as const;
 
 // Helper para fazer requests com timeout
