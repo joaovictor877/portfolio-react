@@ -1,12 +1,15 @@
 // Configuração da API
-// Se estiver em produção, use caminho relativo para usar as APIs locais
-// Se estiver em dev, pode usar o domínio do portfolio original
+// Produção: usa a mesma origem (''), servida pelo Vercel.
+// Desenvolvimento: se não houver VITE_API_BASE_URL, aponta para o domínio já publicado para evitar o Vite servir /api como arquivo.
 const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-export const API_BASE_URL = isProduction ? '' : '';
+const fallbackDevBase = 'https://joaovictor.app.br';
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || (isProduction ? '' : fallbackDevBase)).replace(/\/$/, '');
+
+const withBase = (path: string) => `${API_BASE_URL}${path}`;
 
 export const API_ENDPOINTS = {
-  projects: `/api/projects`,
-  upload: `/api/upload`,
+  projects: withBase('/api/projects'),
+  upload: withBase('/api/upload'),
 } as const;
 
 // Helper para fazer requests com timeout

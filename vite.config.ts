@@ -56,5 +56,12 @@
     server: {
       port: 3000,
       open: true,
+      // Proxy /api in dev to avoid Vite bundling serverless functions
+      proxy: {
+        '/api': {
+          target: process.env.VITE_API_PROXY_TARGET || 'https://joaovictor.app.br',
+          changeOrigin: true,
+        },
+      },
     },
   });
