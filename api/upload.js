@@ -1,4 +1,4 @@
-import { put } from '@vercel/blob';
+import db from './db.js';
 
 const LOG = process.env.LOG_API !== '0';
 function log(...args) { if (LOG) console.log('[upload]', ...args); }
@@ -18,15 +18,13 @@ export default async function handler(req, res) {
     }
 
     const buffer = Buffer.from(data, 'base64');
-    const key = `projects/${Date.now()}_${name}`;
+    const id = String(Date.now()) + '_' + Math.random().toString(36).slice(2,8);
 
-    const blob = await put(key, buffer, {
-      access: 'public',
-      contentType: type,
-      cacheControlMaxAge: 0
-    });
-    log('upload OK', { key, size: buffer.length, type });
-    res.status(200).json({ url: blob.url, pathname: blob.pathname });
+    await db.execute('INSERT INTO uploads (id, filename, mime, data) VALUES (?, ?, ?, ?)', [id, name, type, buffer]);
+
+    const publicUrl = `/api/file?id=${encodeURIComponent(id)}`;
+    log('upload OK', { id, size: buffer.length, type });
+    res.status(200).json({ id, url: publicUrl });
   } catch (err) {
     logError('Upload error:', err);
     res.status(500).json({ error: 'Upload failed', details: String(err) });
