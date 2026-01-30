@@ -259,7 +259,13 @@ export function Projects() {
 
         {/* Projects Grid */}
         {!loading && filteredProjects.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={`grid gap-6 ${
+            filteredProjects.length === 1 
+              ? 'md:grid-cols-1 max-w-md mx-auto' 
+              : filteredProjects.length === 2 
+                ? 'md:grid-cols-2 max-w-4xl mx-auto' 
+                : 'md:grid-cols-2 lg:grid-cols-3'
+          }`}>
             {filteredProjects.map((project, index) => {
               const images = getProjectImages(project);
               const projectId =

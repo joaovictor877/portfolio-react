@@ -396,37 +396,18 @@
     }
   </style>
   
-  <!-- Firebase (apenas para checagem de autenticação e logout) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script>
     // Proteção de rota: exige usuário autenticado
-    const firebaseConfig = {
-      apiKey: "AIzaSyALc7xbZ0iwtFRgPECXGWcWB0M8Q2q7Z3E",
-      authDomain: "portfoliodejoao.firebaseapp.com",
-      projectId: "portfoliodejoao",
-      storageBucket: "portfoliodejoao.firebasestorage.app",
-      messagingSenderId: "904540901550",
-      appId: "1:904540901550:web:56d0957f4bf5907174dd3f"
-    };
-    try { firebase.initializeApp(firebaseConfig); } catch (e) { console.log(e); }
-    const auth = firebase.auth();
-
     // Redireciona para login se não estiver logado
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        window.location.href = '/login';
-      }
-    });
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+      window.location.href = '/login';
+    }
 
-    // Logout real via Firebase + redirect
+    // Logout
     window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('logoutBtn').addEventListener('click', async () => {
-        try {
-          await auth.signOut();
-        } catch (e) {
-          console.log(e);
-        }
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('adminLoggedIn');
+        localStorage.removeItem('adminUser');
         window.location.href = '/';
       });
     });
@@ -609,17 +590,64 @@
       });
     }
 
+    // Comprimir imagem antes de fazer upload
+    async function compressImage(file, maxWidth = 1200, quality = 0.8) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            // Redimensionar se necessário
+            if (width > maxWidth) {
+              height = (height * maxWidth) / width;
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Converter para base64 com compressão
+            canvas.toBlob((blob) => {
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              });
+              resolve(compressedFile);
+            }, 'image/jpeg', quality);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     // Form submit
     document.getElementById('projectForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const projectData = {
-        title: document.getElementById('title').value,
-        description: document.getElementById('description').value,
+        title: document.getElementById('title').value.trim(),
+        description: document.getElementById('description').value.trim(),
         category: document.getElementById('category').value,
         tech: techList,
         createdAt: new Date().toISOString()
       };
+
+      // Validação
+      if (!projectData.title) {
+        showMessage('O título é obrigatório!', 'error');
+        return;
+      }
+      if (!projectData.description) {
+        showMessage('A descrição é obrigatória!', 'error');
+        return;
+      }
 
       try {
         // Upload das imagens para Vercel Blob (opcional)
@@ -627,16 +655,29 @@
           projectData.imageUrls = [];
           for (const file of selectedImages) {
             try {
-              const base64 = await fileToBase64(file);
+              // Comprimir imagem antes de enviar
+              const compressedFile = await compressImage(file);
+              const base64 = await fileToBase64(compressedFile);
+              
+              showMessage(`Enviando imagem ${file.name}...`, 'info');
+              
               const resp = await fetch('/api/upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: file.name, type: file.type, data: base64 })
+                body: JSON.stringify({ name: file.name, type: 'image/jpeg', data: base64 })
               });
+              
+              if (!resp.ok) {
+                const errorText = await resp.text();
+                console.error('Erro upload:', errorText);
+                throw new Error(`Erro ${resp.status}: ${errorText}`);
+              }
+              
               const json = await resp.json();
-              if (resp.ok && json.url) projectData.imageUrls.push(json.url);
+              if (json.url) projectData.imageUrls.push(json.url);
             } catch (imgError) {
-              console.warn('Falha ao enviar imagem:', imgError);
+              console.error('Falha ao enviar imagem:', imgError);
+              showMessage(`Falha ao enviar imagem ${file.name}: ${imgError.message}`, 'error');
             }
           }
           // Compatibilidade: manter imageUrl como primeira imagem, se existir

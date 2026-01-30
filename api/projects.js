@@ -7,7 +7,15 @@ function logError(...args) { if (LOG) console.error('[projects][error]', ...args
 async function listProjects() {
   const [rows] = await db.query('SELECT id, data FROM projects ORDER BY created_at DESC');
   return (rows || []).map(r => {
-    try { return JSON.parse(r.data); } catch { return { id: r.id }; }
+    try { 
+      // Se o MySQL já retornou como objeto, usa diretamente
+      // Se retornou como string, faz parse
+      const parsed = typeof r.data === 'string' ? JSON.parse(r.data) : r.data;
+      return parsed;
+    } catch (err) { 
+      logError('Erro ao parsear projeto:', r.id, err.message);
+      return { id: r.id, title: 'Erro ao carregar', description: 'Erro no formato', category: 'error' }; 
+    }
   });
 }
 

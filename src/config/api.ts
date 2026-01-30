@@ -1,8 +1,8 @@
 // Configuração da API
 // Produção: usa a mesma origem (''), servida pelo Vercel.
-// Desenvolvimento: se não houver VITE_API_BASE_URL, aponta para o domínio já publicado para evitar o Vite servir /api como arquivo.
+// Desenvolvimento: aponta para localhost onde o servidor Express está rodando
 const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-const fallbackDevBase = 'https://joaovictor.app.br';
+const fallbackDevBase = '';  // Em dev, usa proxy do Vite que aponta para localhost:3001
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || (isProduction ? '' : fallbackDevBase)).replace(/\/$/, '');
 
 const withBase = (path: string) => `${API_BASE_URL}${path}`;
