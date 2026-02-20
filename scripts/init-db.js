@@ -59,6 +59,21 @@ async function initDatabase() {
     `);
     console.log('✅ Tabela uploads criada!');
 
+    // Criar tabela de usuários
+    console.log('\n📋 Criando tabela users...');
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        email VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_login TIMESTAMP NULL,
+        is_active BOOLEAN DEFAULT TRUE
+      )
+    `);
+    console.log('✅ Tabela users criada!');
+
     // Verificar tabelas existentes
     console.log('\n📊 Tabelas no banco:');
     const [tables] = await connection.execute('SHOW TABLES');
@@ -66,9 +81,9 @@ async function initDatabase() {
 
     console.log('\n🎉 Banco de dados inicializado com sucesso!');
     console.log('\n📝 Próximos passos:');
-    console.log('1. Execute: npm run dev:full');
-    console.log('2. Acesse: http://localhost:3000');
-    console.log('3. Login admin em: http://localhost:3000/login');
+    console.log('1. Crie um usuário: npm run user:create');
+    console.log('2. Execute o servidor: npm run dev:full');
+    console.log('3. Acesse o login: http://localhost:5173/login.html');
 
   } catch (error) {
     console.error('❌ Erro ao inicializar banco:', error);
