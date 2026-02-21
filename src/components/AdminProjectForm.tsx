@@ -21,6 +21,7 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
   const [category, setCategory] = useState('');
   const [techList, setTechList] = useState<string[]>([]);
   const [techInput, setTechInput] = useState('');
+  const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,6 +31,15 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
       setDescription(editingProject.description);
       setCategory(editingProject.category);
       setTechList(editingProject.tech || []);
+
+      const urls = (editingProject.imageUrls && editingProject.imageUrls.length > 0)
+        ? editingProject.imageUrls
+        : (editingProject.imageUrl ? [editingProject.imageUrl] : []);
+
+      setExistingImageUrls(urls);
+      setSelectedImages([]);
+    } else {
+      setExistingImageUrls([]);
     }
   }, [editingProject]);
 
@@ -52,6 +62,10 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
 
   const handleRemoveImage = (index: number) => {
     setSelectedImages(selectedImages.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveExistingImage = (index: number) => {
+    setExistingImageUrls(existingImageUrls.filter((_, i) => i !== index));
   };
 
   const compressImage = async (file: File): Promise<File> => {
@@ -129,10 +143,11 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
         createdAt: editingProject?.createdAt || new Date().toISOString()
       };
 
+      // Começa com as imagens já existentes (se estiver editando)
+      const finalImageUrls: string[] = [...(existingImageUrls || [])];
+
       // Upload de imagens
       if (selectedImages.length > 0) {
-        projectData.imageUrls = [];
-        
         for (const file of selectedImages) {
           try {
             const compressedFile = await compressImage(file);
@@ -154,20 +169,22 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
 
             const json = await response.json();
             if (json.url) {
-              projectData.imageUrls.push(json.url);
+              finalImageUrls.push(json.url);
             }
           } catch (error) {
             console.error('Erro ao enviar imagem:', error);
             toast.error(`Falha ao enviar ${file.name}`);
           }
         }
+      }
 
-        if (projectData.imageUrls.length > 0) {
-          projectData.imageUrl = projectData.imageUrls[0];
-        }
-      } else if (editingProject?.imageUrl) {
-        projectData.imageUrl = editingProject.imageUrl;
-        projectData.imageUrls = editingProject.imageUrls || [editingProject.imageUrl];
+      if (finalImageUrls.length > 0) {
+        projectData.imageUrls = finalImageUrls;
+        projectData.imageUrl = finalImageUrls[0];
+      } else {
+        // sem imagens
+        delete projectData.imageUrls;
+        delete projectData.imageUrl;
       }
 
       const action = editingProject ? 'update' : 'create';
@@ -198,6 +215,7 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
       setDescription('');
       setCategory('');
       setTechList([]);
+      setExistingImageUrls([]);
       setSelectedImages([]);
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -264,7 +282,7 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
       {/* Tecnologias */}
       <div className="space-y-2">
         <Label className="text-sm font-medium text-slate-300">Tecnologias Utilizadas</Label>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             value={techInput}
             onChange={(e) => setTechInput(e.target.value)}
@@ -275,7 +293,7 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
           <Button
             type="button"
             onClick={handleAddTech}
-            className="h-11 px-4 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 rounded-lg transition-all"
+            className="h-11 px-4 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 rounded-lg transition-all sm:w-auto"
           >
             <Plus className="w-5 h-5" />
           </Button>
@@ -288,7 +306,7 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
                 key={tech}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="inline-flex items-center gap-2 bg-slate-800/70 border border-slate-700/50 text-slate-200 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
+                className="inline-flex items-center gap-2 bg-slate-800/70 border border-slate-700/50 text-slate-200 px-2.5 py-1 rounded-md text-xs hover:bg-slate-800 transition-colors"
               >
                 <span>{tech}</span>
                 <button
@@ -324,6 +342,34 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
             <p className="text-xs text-slate-500">ou arraste e solte aqui</p>
           </label>
         </div>
+
+        {existingImageUrls.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/50">
+            {existingImageUrls.map((url, index) => (
+              <motion.div
+                key={`${url}-${index}`}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="relative aspect-square rounded-lg overflow-hidden border border-slate-700/50 group hover:border-[#00ffc8]/30 transition-colors"
+              >
+                <img
+                  src={url}
+                  alt={`Imagem ${index + 1}`}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveExistingImage(index)}
+                  className="absolute top-2 right-2 w-7 h-7 bg-red-500/90 hover:bg-red-500 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                  aria-label="Remover imagem"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {selectedImages.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/50">
