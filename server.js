@@ -73,7 +73,7 @@ app.get('/api/file', async (req, res) => {
 });
 
 // Em produção, serve arquivos estáticos do dist
-if (isProduction) {
+if (isProduction && process.env.VERCEL !== '1') {
   app.use(express.static(path.join(__dirname, 'dist')));
   
   // SPA fallback - todas as rotas vão para index.html
@@ -82,11 +82,9 @@ if (isProduction) {
   });
 }
 
-// Exporta o app para Vercel serverless functions
-export default app;
-
 // Se não estiver no Vercel (rodando localmente), inicia o servidor
 if (process.env.VERCEL !== '1') {
+  const PORT = process.env.PORT || process.env.API_PORT || 3001;
   app.listen(PORT, () => {
     console.log(`🚀 API Server running on http://localhost:${PORT}`);
     console.log(`📊 MySQL Database: ${process.env.MYSQL_DATABASE || 'portfolio'}`);
