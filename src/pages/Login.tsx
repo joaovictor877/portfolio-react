@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowLeft, LogIn, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, LogIn, User, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -64,36 +64,34 @@ export default function Login() {
         className="w-full max-w-md relative z-10"
       >
         {/* Header com Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 sm:mb-10">
           <motion.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center gap-3 mb-6"
+            className="inline-flex items-center justify-center mb-6 sm:mb-8"
           >
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00ffc8] to-[#00b8ff] flex items-center justify-center shadow-lg">
-              <span className="text-slate-950 text-2xl font-bold">JV</span>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-[#00ffc8] to-[#00b8ff] flex items-center justify-center shadow-lg shadow-[#00ffc8]/20 relative">
+              <span className="text-slate-950 text-2xl sm:text-3xl font-bold">JV</span>
+              <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-[#00ffc8] animate-pulse" />
             </div>
-            <span className="text-4xl font-bold bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text">
-              Portfólio
-            </span>
           </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-5xl font-bold mb-3 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text"
+            className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text"
           >
-            Bem-vindo
+            Área Admin
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-slate-400 text-lg"
+            className="text-slate-400 text-sm sm:text-base px-4"
           >
-            Entre em sua conta para continuar
+            Faça login para gerenciar seu portfólio
           </motion.p>
         </div>
 
@@ -102,48 +100,48 @@ export default function Login() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-10 shadow-2xl"
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-2xl"
         >
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username */}
-            <div className="space-y-3">
-              <Label htmlFor="username" className="text-[#00ffc8] text-base">
+            <div className="space-y-2">
+              <Label htmlFor="username" className="text-sm font-medium text-slate-300">
                 Usuário
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                 <Input
                   id="username"
                   type="text"
-                  placeholder="admin"
+                  placeholder="Digite seu usuário"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-11 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-base"
+                  className="pl-12 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-white placeholder:text-slate-500"
                   required
                 />
               </div>
             </div>
 
             {/* Password */}
-            <div className="space-y-3">
-              <Label htmlFor="password" className="text-[#00ffc8] text-base">
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium text-slate-300">
                 Senha
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="Digite sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-11 pr-11 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-base"
+                  className="pl-12 pr-12 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-white placeholder:text-slate-500"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00ffc8] transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[#00ffc8] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -152,7 +150,7 @@ export default function Login() {
 
             {/* Remember & Forgot */}
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-white transition-colors">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-slate-300 transition-colors">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -164,9 +162,9 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => toast.info('Entre em contato com o administrador para redefinir sua senha.')}
-                className="text-[#00ffc8] hover:text-[#00b8ff] transition-colors"
+                className="text-[#00ffc8] hover:text-[#00b8ff] transition-colors font-medium"
               >
-                Esqueci a senha
+                Esqueceu a senha?
               </button>
             </div>
 
@@ -174,7 +172,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold py-7 text-lg rounded-full transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30 hover:-translate-y-0.5"
+              className="w-full bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold py-6 text-base rounded-xl transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -196,13 +194,13 @@ export default function Login() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center mt-8"
+          className="text-center mt-6"
         >
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-[#00ffc8] hover:text-[#00b8ff] transition-colors group text-base"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-[#00ffc8] transition-colors group text-sm"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Voltar ao portfólio
           </Link>
         </motion.div>

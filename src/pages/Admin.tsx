@@ -103,41 +103,44 @@ export default function Admin() {
       <div className="fixed top-0 right-0 w-96 h-96 bg-[#00ffc8]/5 rounded-full blur-3xl" />
       <div className="fixed bottom-0 left-0 w-96 h-96 bg-[#00b8ff]/5 rounded-full blur-3xl" />
 
-      <div className="container mx-auto px-4 py-8 relative z-10 max-w-7xl">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10 max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800"
+          className="flex flex-col gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-slate-800"
         >
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text flex items-center gap-3">
-              📱 Gerenciador de Projetos
-            </h1>
-            <p className="text-slate-400 mt-2">
-              Olá, {localStorage.getItem('adminUser')}
-            </p>
-          </div>
-          
-          <div className="flex gap-3">
-            {!showForm && (
-              <Button
-                onClick={() => setShowForm(true)}
-                className="bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Novo Projeto
-              </Button>
-            )}
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text flex items-center gap-2">
+                <span className="text-2xl sm:text-3xl">⚡</span>
+                <span className="truncate">Painel Admin</span>
+              </h1>
+              <p className="text-slate-400 mt-1 text-sm sm:text-base truncate">
+                Olá, {localStorage.getItem('adminUser')}
+              </p>
+            </div>
+            
             <Button
               onClick={handleLogout}
+              size="sm"
               variant="outline"
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex-shrink-0"
             >
-              <LogOut className="w-5 h-5 mr-2" />
-              Logout
+              <LogOut className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
+          
+          {!showForm && (
+            <Button
+              onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="w-full sm:w-auto bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Novo Projeto
+            </Button>
+          )}
         </motion.div>
 
         {/* Form Section */}
@@ -146,19 +149,20 @@ export default function Admin() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
-            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8 relative">
-              <button
-                onClick={handleCancelEdit}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <h2 className="text-2xl font-bold text-[#00ffc8] mb-6">
-                {editingProject ? 'Editar Projeto' : 'Adicionar Novo Projeto'}
-              </h2>
+            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 relative">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#00ffc8]">
+                  {editingProject ? '✏️ Editar Projeto' : '➕ Novo Projeto'}
+                </h2>
+                <button
+                  onClick={handleCancelEdit}
+                  className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg"
+                >
+                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+              </div>
               
               <AdminProjectForm
                 editingProject={editingProject}
@@ -174,10 +178,11 @@ export default function Admin() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8"
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8"
         >
-          <h2 className="text-2xl font-bold text-[#00ffc8] mb-6">
-            Meus Projetos ({projects.length})
+          <h2 className="text-xl sm:text-2xl font-bold text-[#00ffc8] mb-4 sm:mb-6 flex items-center gap-2">
+            <span>🚀</span>
+            <span>Projetos ({projects.length})</span>
           </h2>
           
           {isLoading ? (
