@@ -45,7 +45,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
           {(() => {
             const thumbnailUrl = project.imageUrl || project.imageUrls?.[0];
             return (
-          <div className="flex flex-row gap-4 p-4 items-start">
+          <div className="flex flex-row gap-3 sm:gap-4 p-4 items-start">
             {/* Image */}
             <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
               {thumbnailUrl ? (
@@ -110,11 +110,11 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-2 flex-shrink-0">
+            <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
               <Button
                 onClick={() => onEdit(project)}
                 size="sm"
-                className="h-8 px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
+                className="h-8 px-2.5 sm:px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
                 variant="outline"
               >
                 <Edit2 className="w-3.5 h-3.5 sm:mr-1.5" />
@@ -123,7 +123,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
               <Button
                 onClick={() => onDelete(project.id)}
                 size="sm"
-                className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
+                className="h-8 px-2.5 sm:px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
                 variant="outline"
               >
                 <Trash2 className="w-3.5 h-3.5 sm:mr-1.5" />

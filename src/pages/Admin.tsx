@@ -103,7 +103,7 @@ export default function Admin() {
       <div className="fixed top-0 right-0 w-96 h-96 bg-[#00ffc8]/5 rounded-full blur-3xl" />
       <div className="fixed bottom-0 left-0 w-96 h-96 bg-[#00b8ff]/5 rounded-full blur-3xl" />
 
-      <div className="container mx-auto px-4 py-8 relative z-10 max-w-7xl">
+      <div className="container mx-auto px-4 py-6 sm:py-8 relative z-10 max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -117,11 +117,11 @@ export default function Admin() {
             <p className="text-slate-400 mt-2">Olá, {localStorage.getItem("adminUser")}</p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             {!showForm && (
               <Button
                 onClick={() => setShowForm(true)}
-                className="bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Novo Projeto
@@ -130,7 +130,7 @@ export default function Admin() {
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+              className="w-full sm:w-auto border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
             >
               <LogOut className="w-5 h-5 mr-2" />
               Logout
@@ -146,7 +146,7 @@ export default function Admin() {
             exit={{ opacity: 0, height: 0 }}
             className="mb-8"
           >
-            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8 relative">
+            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 sm:p-8 relative">
               <button
                 onClick={handleCancelEdit}
                 className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
@@ -172,7 +172,7 @@ export default function Admin() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8"
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 sm:p-8"
         >
           <h2 className="text-2xl font-bold text-[#00ffc8] mb-6">
             Meus Projetos ({projects.length})
