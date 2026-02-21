@@ -11,7 +11,10 @@ async function listProjects() {
       // Se o MySQL já retornou como objeto, usa diretamente
       // Se retornou como string, faz parse
       const parsed = typeof r.data === 'string' ? JSON.parse(r.data) : r.data;
-      return parsed;
+      const obj = (parsed && typeof parsed === 'object') ? parsed : {};
+      // Garante um id estável/unico para o React (evita key duplicada/undefined)
+      const id = obj.id ? String(obj.id) : String(r.id);
+      return { ...obj, id };
     } catch (err) { 
       logError('Erro ao parsear projeto:', r.id, err.message);
       return { id: r.id, title: 'Erro ao carregar', description: 'Erro no formato', category: 'error' }; 
