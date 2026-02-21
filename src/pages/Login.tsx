@@ -1,0 +1,212 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router';
+import { motion } from 'motion/react';
+import { ArrowLeft, LogIn, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { toast } from 'sonner';
+
+export default function Login() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!username || !password) {
+      toast.error('Por favor, preencha todos os campos!');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminUser', username);
+        
+        toast.success('Login realizado com sucesso! 🎉');
+        setTimeout(() => navigate('/admin'), 500);
+      } else {
+        toast.error(data.message || 'Credenciais inválidas');
+      }
+    } catch (error) {
+      console.error('Erro no login:', error);
+      toast.error('Erro ao fazer login. Verifique sua conexão.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Efeitos de fundo */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#00ffc8]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00b8ff]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md relative z-10"
+      >
+        {/* Header com Logo */}
+        <div className="text-center mb-8">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="inline-flex items-center justify-center gap-3 mb-6"
+          >
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00ffc8] to-[#00b8ff] flex items-center justify-center shadow-lg">
+              <span className="text-slate-950 text-2xl font-bold">JV</span>
+            </div>
+            <span className="text-4xl font-bold bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text">
+              Portfólio
+            </span>
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-5xl font-bold mb-3 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text"
+          >
+            Bem-vindo
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-slate-400 text-lg"
+          >
+            Entre em sua conta para continuar
+          </motion.p>
+        </div>
+
+        {/* Formulário */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-10 shadow-2xl"
+        >
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Username */}
+            <div className="space-y-3">
+              <Label htmlFor="username" className="text-[#00ffc8] text-base">
+                Usuário
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="admin"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="pl-11 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-base"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="space-y-3">
+              <Label htmlFor="password" className="text-[#00ffc8] text-base">
+                Senha
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-11 pr-11 h-12 bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 transition-all text-base"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00ffc8] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember & Forgot */}
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-white transition-colors">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-700 bg-slate-950/50 text-[#00ffc8] focus:ring-[#00ffc8]/20"
+                />
+                <span>Lembrar-me</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => toast.info('Entre em contato com o administrador para redefinir sua senha.')}
+                className="text-[#00ffc8] hover:text-[#00b8ff] transition-colors"
+              >
+                Esqueci a senha
+              </button>
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold py-7 text-lg rounded-full transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30 hover:-translate-y-0.5"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-slate-950/20 border-t-slate-950 rounded-full animate-spin" />
+                  Entrando...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <LogIn className="w-5 h-5" />
+                  Entrar
+                </span>
+              )}
+            </Button>
+          </form>
+        </motion.div>
+
+        {/* Voltar ao portfólio */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-center mt-8"
+        >
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-[#00ffc8] hover:text-[#00b8ff] transition-colors group text-base"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            Voltar ao portfólio
+          </Link>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}

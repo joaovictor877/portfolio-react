@@ -5,6 +5,17 @@
 
   export default defineConfig({
     plugins: [react()],
+    server: {
+      port: 3000,
+      open: true,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          secure: false
+        }
+      }
+    },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -52,16 +63,5 @@
     build: {
       target: 'esnext',
       outDir: 'build',
-    },
-    server: {
-      port: 3000,
-      open: true,
-      // Proxy /api in dev to avoid Vite bundling serverless functions
-      proxy: {
-        '/api': {
-          target: process.env.VITE_API_PROXY_TARGET || 'http://localhost:3001',
-          changeOrigin: true,
-        },
-      },
     },
   });
