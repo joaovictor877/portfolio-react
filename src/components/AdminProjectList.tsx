@@ -49,10 +49,52 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
                 <>
                   <img
                     src={project.imageUrl}
-                    alt={project.title}
+                    alt={project.title || "Projeto"}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+
+                  {/* Mobile overlay (previnir "só foto") */}
+                  <div className="sm:hidden absolute inset-x-0 bottom-0 p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-bold text-white line-clamp-1">
+                          {project.title || "(Sem título)"}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1 text-[11px]">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#00ffc8]/10 text-[#00ffc8] rounded-md border border-[#00ffc8]/20">
+                            <Tag className="w-3 h-3" />
+                            {project.category || "(Sem categoria)"}
+                          </span>
+                          {project.createdAt && (
+                            <span className="inline-flex items-center gap-1 text-slate-300/80">
+                              <Calendar className="w-3 h-3" />
+                              {formatDate(project.createdAt)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 flex-shrink-0">
+                        <Button
+                          onClick={() => onEdit(project)}
+                          size="sm"
+                          className="h-8 px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
+                          variant="outline"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button
+                          onClick={() => onDelete(project.id)}
+                          size="sm"
+                          className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
+                          variant="outline"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
@@ -62,17 +104,17 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0 flex flex-col">
+            <div className="hidden sm:flex sm:flex-1 sm:min-w-0 sm:flex-col">
               {/* Title and Category */}
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base sm:text-lg font-bold text-white mb-1 line-clamp-1 group-hover:text-[#00ffc8] transition-colors">
-                    {project.title}
+                    {project.title || "(Sem título)"}
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 text-xs">
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#00ffc8]/10 text-[#00ffc8] rounded-md border border-[#00ffc8]/20">
                       <Tag className="w-3 h-3" />
-                      {project.category}
+                      {project.category || "(Sem categoria)"}
                     </span>
                     {project.createdAt && (
                       <span className="inline-flex items-center gap-1 text-slate-500">
@@ -86,7 +128,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
 
               {/* Description */}
               <p className="text-sm text-slate-400 line-clamp-2 mb-3">
-                {project.description}
+                {project.description || "(Sem descrição)"}
               </p>
 
               {/* Tech Stack and Actions */}
