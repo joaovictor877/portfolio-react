@@ -1,9 +1,25 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "build",
-  "framework": null,
-  "rewrites": [
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/admin", "destination": "/admin.html" }
-  ]
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

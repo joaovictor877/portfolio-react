@@ -72,28 +72,27 @@ app.get('/api/file', async (req, res) => {
   }
 });
 
-// Em produção, serve arquivos estáticos do build
+// Em produção, serve arquivos estáticos do dist
 if (isProduction) {
-  app.use(express.static(path.join(__dirname, 'build')));
+  app.use(express.static(path.join(__dirname, 'dist')));
   
-  app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'login.html'));
-  });
-  
-  app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'admin.html'));
-  });
-  
+  // SPA fallback - todas as rotas vão para index.html
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`🚀 API Server running on http://localhost:${PORT}`);
-  console.log(`📊 MySQL Database: ${process.env.MYSQL_DATABASE || 'portfolio'}`);
-  console.log(`🌍 Environment: ${isProduction ? 'PRODUCTION' : 'DEVELOPMENT'}`);
-  if (isProduction) {
-    console.log(`📦 Serving static files from: build/`);
-  }
-});
+// Exporta o app para Vercel serverless functions
+export default app;
+
+// Se não estiver no Vercel (rodando localmente), inicia o servidor
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 API Server running on http://localhost:${PORT}`);
+    console.log(`📊 MySQL Database: ${process.env.MYSQL_DATABASE || 'portfolio'}`);
+    console.log(`🌍 Environment: ${isProduction ? 'PRODUCTION' : 'DEVELOPMENT'}`);
+    if (isProduction) {
+      console.log(`📦 Serving static files from: dist/`);
+    }
+  });
+}
