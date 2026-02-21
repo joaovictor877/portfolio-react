@@ -47,7 +47,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
             return (
           <div className="flex flex-row gap-3 sm:gap-4 p-4 items-start">
             {/* Image */}
-            <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
               {thumbnailUrl ? (
                 <>
                   <img
@@ -65,9 +65,9 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0 flex flex-col">
+            <div className="flex-1 min-w-0 flex flex-col pr-11">
               {/* Title and Category */}
-              <h3 className="text-base sm:text-lg font-bold text-white mb-1 line-clamp-1 group-hover:text-[#00ffc8] transition-colors">
+              <h3 className="text-base sm:text-lg font-bold text-white mb-1 line-clamp-2 group-hover:text-[#00ffc8] transition-colors">
                 {project.title || "(Sem título)"}
               </h3>
 
@@ -109,12 +109,12 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-row sm:flex-col gap-2 flex-shrink-0">
+            {/* Desktop Action Buttons */}
+            <div className="hidden sm:flex flex-col gap-2 flex-shrink-0">
               <Button
                 onClick={() => onEdit(project)}
                 size="sm"
-                className="h-8 px-2.5 sm:px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
+                className="h-8 px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
                 variant="outline"
               >
                 <Edit2 className="w-3.5 h-3.5 sm:mr-1.5" />
@@ -123,7 +123,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
               <Button
                 onClick={() => onDelete(project.id)}
                 size="sm"
-                className="h-8 px-2.5 sm:px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
+                className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
                 variant="outline"
               >
                 <Trash2 className="w-3.5 h-3.5 sm:mr-1.5" />
@@ -133,6 +133,30 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
           </div>
             );
           })()}
+
+          {/* Mobile Action Buttons (absolute, do not squeeze content) */}
+          <div className="absolute top-4 right-4 flex gap-2 sm:hidden">
+            <Button
+              onClick={() => onEdit(project)}
+              size="sm"
+              className="h-8 w-8 p-0 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
+              variant="outline"
+              aria-label="Editar"
+              title="Editar"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+            </Button>
+            <Button
+              onClick={() => onDelete(project.id)}
+              size="sm"
+              className="h-8 w-8 p-0 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
+              variant="outline"
+              aria-label="Excluir"
+              title="Excluir"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          </div>
 
           {/* Hover Effect Border */}
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
