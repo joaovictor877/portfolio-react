@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Edit, Trash2, Calendar } from 'lucide-react';
+import { Edit2, Trash2, Calendar, Tag, Image as ImageIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import type { Project } from '../pages/Admin';
 
@@ -12,11 +12,12 @@ interface AdminProjectListProps {
 export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectListProps) {
   if (projects.length === 0) {
     return (
-      <div className="text-center py-12 sm:py-16">
-        <div className="text-5xl sm:text-6xl mb-4">🚀</div>
-        <p className="text-slate-400 text-base sm:text-lg px-4">
-          Nenhum projeto ainda. Crie seu primeiro!
-        </p>
+      <div className="text-center py-16">
+        <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
+          <ImageIcon className="w-10 h-10 text-slate-600" />
+        </div>
+        <h3 className="text-xl font-semibold text-slate-300 mb-2">Nenhum projeto ainda</h3>
+        <p className="text-slate-500">Clique em "Adicionar Novo Projeto" para começar</p>
       </div>
     );
   }
@@ -32,112 +33,112 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
   };
 
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="space-y-4">
       {projects.map((project, index) => (
         <motion.div
           key={project.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          className="bg-slate-950/50 border border-slate-800 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6 hover:border-[#00ffc8]/30 transition-all group"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.05 }}
+          className="group relative bg-slate-950/50 border border-slate-800/50 hover:border-[#00ffc8]/30 rounded-xl overflow-hidden transition-all hover:shadow-lg hover:shadow-[#00ffc8]/5"
         >
-          <div className="flex flex-col gap-3 sm:gap-4">
-            {/* Cabeçalho Mobile - Imagem + Título */}
-            <div className="flex gap-3 sm:gap-4">
-              {/* Imagem - Menor em mobile */}
-              <div className="w-20 h-20 sm:w-32 sm:h-32 lg:w-48 lg:h-48 flex-shrink-0">
-                {project.imageUrl ? (
+          <div className="flex flex-col sm:flex-row gap-4 p-4">
+            {/* Image */}
+            <div className="relative w-full sm:w-40 h-40 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
+              {project.imageUrl ? (
+                <>
                   <img
                     src={project.imageUrl}
                     alt={project.title}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#00ffc8]/20 to-[#00b8ff]/20 rounded-lg flex items-center justify-center">
-                    <span className="text-slate-500 text-xs sm:text-sm">Sem imagem</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                </>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-slate-700" />
+                </div>
+              )}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              {/* Title and Category */}
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-1 line-clamp-1 group-hover:text-[#00ffc8] transition-colors">
+                    {project.title}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#00ffc8]/10 text-[#00ffc8] rounded-md border border-[#00ffc8]/20">
+                      <Tag className="w-3 h-3" />
+                      {project.category}
+                    </span>
+                    {project.createdAt && (
+                      <span className="inline-flex items-center gap-1 text-slate-500">
+                        <Calendar className="w-3 h-3" />
+                        {formatDate(project.createdAt)}
+                      </span>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
 
-              {/* Informações principais */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#00ffc8] mb-1 sm:mb-2 line-clamp-2">
-                  {project.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-400 mb-2">
-                  <span className="capitalize bg-slate-800 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">
-                    {project.category}
-                  </span>
-                  {project.createdAt && (
-                    <span className="hidden sm:flex items-center gap-1">
-                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                      {formatDate(project.createdAt)}
-                    </span>
+              {/* Description */}
+              <p className="text-sm text-slate-400 line-clamp-2 mb-3">
+                {project.description}
+              </p>
+
+              {/* Tech Stack and Actions */}
+              <div className="flex items-center justify-between gap-3 mt-auto">
+                {/* Tech Stack */}
+                <div className="flex-1 min-w-0">
+                  {project.tech && project.tech.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.slice(0, 3).map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 bg-slate-800/70 text-slate-300 text-xs rounded-md border border-slate-700/50"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.tech.length > 3 && (
+                        <span className="px-2 py-0.5 bg-slate-800/50 text-slate-500 text-xs rounded-md">
+                          +{project.tech.length - 3}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
-                
-                {/* Descrição - Escondida em telas muito pequenas */}
-                <p className="hidden sm:block text-slate-400 text-sm mb-2 line-clamp-2 lg:line-clamp-3">
-                  {project.description}
-                </p>
-              </div>
-            </div>
 
-            {/* Descrição Mobile (abaixo da imagem) */}
-            <p className="sm:hidden text-slate-400 text-sm line-clamp-2">
-              {project.description}
-            </p>
-
-            {/* Tecnologias */}
-            {project.tech && project.tech.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {project.tech.slice(0, 4).map((tech, i) => (
-                  <span
-                    key={i}
-                    className="bg-[#00ffc8]/10 text-[#00ffc8] px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm border border-[#00ffc8]/30"
+                {/* Action Buttons */}
+                <div className="flex gap-2 flex-shrink-0">
+                  <Button
+                    onClick={() => onEdit(project)}
+                    size="sm"
+                    className="h-8 px-3 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 hover:border-[#00ffc8]/40"
+                    variant="outline"
                   >
-                    {tech}
-                  </span>
-                ))}
-                {project.tech.length > 4 && (
-                  <span className="bg-slate-800 text-slate-400 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm">
-                    +{project.tech.length - 4}
-                  </span>
-                )}
+                    <Edit2 className="w-3.5 h-3.5 sm:mr-1.5" />
+                    <span className="hidden sm:inline text-xs">Editar</span>
+                  </Button>
+                  <Button
+                    onClick={() => onDelete(project.id)}
+                    size="sm"
+                    className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40"
+                    variant="outline"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 sm:mr-1.5" />
+                    <span className="hidden sm:inline text-xs">Excluir</span>
+                  </Button>
+                </div>
               </div>
-            )}
-
-            {/* Data (Mobile apenas) */}
-            {project.createdAt && (
-              <div className="sm:hidden flex items-center gap-1 text-xs text-slate-500">
-                <Calendar className="w-3 h-3" />
-                {formatDate(project.createdAt)}
-              </div>
-            )}
-
-            {/* Ações */}
-            <div className="flex gap-2 pt-2 border-t border-slate-800">
-              <Button
-                onClick={() => onEdit(project)}
-                size="sm"
-                className="flex-1 bg-[#00ffc8] hover:bg-[#00e6b0] text-slate-950 text-xs sm:text-sm h-8 sm:h-9"
-              >
-                <Edit className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Editar</span>
-                <span className="sm:hidden">Edit</span>
-              </Button>
-              <Button
-                onClick={() => onDelete(project.id)}
-                size="sm"
-                variant="outline"
-                className="flex-1 border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 text-xs sm:text-sm h-8 sm:h-9"
-              >
-                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Deletar</span>
-                <span className="sm:hidden">Del</span>
-              </Button>
             </div>
           </div>
+
+          {/* Hover Effect Border */}
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
         </motion.div>
       ))}
     </div>

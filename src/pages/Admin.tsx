@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { LogOut, Plus, X } from 'lucide-react';
+import { LogOut, Plus, X, Folder, TrendingUp, Clock } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { AdminProjectForm } from '../components/AdminProjectForm';
 import { AdminProjectList } from '../components/AdminProjectList';
@@ -98,105 +98,200 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Background Effects */}
-      <div className="fixed top-0 right-0 w-96 h-96 bg-[#00ffc8]/5 rounded-full blur-3xl" />
-      <div className="fixed bottom-0 left-0 w-96 h-96 bg-[#00b8ff]/5 rounded-full blur-3xl" />
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Background Pattern */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00ffc8]/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00b8ff]/3 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,200,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,200,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      </div>
 
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10 max-w-7xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-slate-800"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] text-transparent bg-clip-text flex items-center gap-2">
-                <span className="text-2xl sm:text-3xl">⚡</span>
-                <span className="truncate">Painel Admin</span>
-              </h1>
-              <p className="text-slate-400 mt-1 text-sm sm:text-base truncate">
-                Olá, {localStorage.getItem('adminUser')}
-              </p>
+      {/* Top Navigation Bar */}
+      <motion.nav 
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/50"
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Logo/Title */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffc8] to-[#00b8ff] flex items-center justify-center">
+                <Folder className="w-5 h-5 text-slate-950" />
+              </div>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold text-white">Dashboard</h1>
+                <p className="text-xs text-slate-400 hidden sm:block">Gerencie seus projetos</p>
+              </div>
             </div>
-            
-            <Button
-              onClick={handleLogout}
-              size="sm"
-              variant="outline"
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex-shrink-0"
-            >
-              <LogOut className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Logout</span>
-            </Button>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-sm text-slate-400 hidden md:block">
+                {localStorage.getItem('adminUser')}
+              </span>
+              <Button
+                onClick={handleLogout}
+                size="sm"
+                variant="outline"
+                className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-300"
+              >
+                <LogOut className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Sair</span>
+              </Button>
+            </div>
           </div>
-          
-          {!showForm && (
+        </div>
+      </motion.nav>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 relative z-10">
+        {/* Stats Cards */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 sm:mb-8"
+        >
+          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm mb-1">Total de Projetos</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#00ffc8]">{projects.length}</p>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-[#00ffc8]/10 flex items-center justify-center">
+                <Folder className="w-6 h-6 text-[#00ffc8]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm mb-1">Adicionados</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#00b8ff]">
+                  {projects.filter(p => {
+                    const date = new Date(p.createdAt || '');
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    return date > thirtyDaysAgo;
+                  }).length}
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-[#00b8ff]/10 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-[#00b8ff]" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">Últimos 30 dias</p>
+          </div>
+
+          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-400 text-sm mb-1">Última Atualização</p>
+                <p className="text-lg sm:text-xl font-semibold text-white">
+                  {projects.length > 0 
+                    ? new Date(projects[0].createdAt || '').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+                    : '--'
+                  }
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-slate-800/50 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-slate-400" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Add Project Button */}
+        {!showForm && (
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
             <Button
               onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-full sm:w-auto bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30"
+              className="w-full sm:w-auto bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold h-12 px-6 rounded-xl shadow-lg shadow-[#00ffc8]/20 hover:shadow-[#00ffc8]/30 transition-all hover:scale-[1.02]"
             >
               <Plus className="w-5 h-5 mr-2" />
-              Novo Projeto
+              Adicionar Novo Projeto
             </Button>
-          )}
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Form Section */}
         {showForm && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             className="mb-6 sm:mb-8"
           >
-            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 relative">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-[#00ffc8]">
-                  {editingProject ? '✏️ Editar Projeto' : '➕ Novo Projeto'}
-                </h2>
+            <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl overflow-hidden">
+              {/* Form Header */}
+              <div className="bg-gradient-to-r from-[#00ffc8]/10 to-[#00b8ff]/10 px-4 sm:px-6 py-4 border-b border-slate-800/50 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold text-white">
+                    {editingProject ? 'Editar Projeto' : 'Novo Projeto'}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                    {editingProject ? 'Atualize as informações do projeto' : 'Preencha os dados do novo projeto'}
+                  </p>
+                </div>
                 <button
                   onClick={handleCancelEdit}
-                  className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg"
+                  className="w-8 h-8 rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center text-slate-400 hover:text-white"
                 >
-                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-              
-              <AdminProjectForm
-                editingProject={editingProject}
-                onSuccess={handleFormSuccess}
-                onCancel={handleCancelEdit}
-              />
+
+              {/* Form Content */}
+              <div className="p-4 sm:p-6 lg:p-8">
+                <AdminProjectForm
+                  editingProject={editingProject}
+                  onSuccess={handleFormSuccess}
+                  onCancel={handleCancelEdit}
+                />
+              </div>
             </div>
           </motion.div>
         )}
 
         {/* Projects List */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl overflow-hidden"
         >
-          <h2 className="text-xl sm:text-2xl font-bold text-[#00ffc8] mb-4 sm:mb-6 flex items-center gap-2">
-            <span>🚀</span>
-            <span>Projetos ({projects.length})</span>
-          </h2>
-          
-          {isLoading ? (
-            <div className="text-center py-12 text-slate-400">
-              <div className="w-12 h-12 border-4 border-[#00ffc8]/20 border-t-[#00ffc8] rounded-full animate-spin mx-auto mb-4" />
-              Carregando projetos...
-            </div>
-          ) : (
-            <AdminProjectList
-              projects={projects}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )}
+          {/* List Header */}
+          <div className="px-4 sm:px-6 py-4 border-b border-slate-800/50">
+            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+              <Folder className="w-5 h-5 text-[#00ffc8]" />
+              Meus Projetos
+              <span className="ml-2 px-2 py-0.5 bg-[#00ffc8]/10 text-[#00ffc8] text-sm font-semibold rounded-full">
+                {projects.length}
+              </span>
+            </h2>
+          </div>
+
+          {/* List Content */}
+          <div className="p-4 sm:p-6">
+            {isLoading ? (
+              <div className="text-center py-16">
+                <div className="w-12 h-12 border-4 border-[#00ffc8]/20 border-t-[#00ffc8] rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-slate-400">Carregando projetos...</p>
+              </div>
+            ) : (
+              <AdminProjectList
+                projects={projects}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
+          </div>
         </motion.div>
       </div>
     </div>

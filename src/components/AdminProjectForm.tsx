@@ -208,11 +208,11 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Título e Categoria */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-        <div className="space-y-1.5 sm:space-y-2">
-          <Label htmlFor="title" className="text-[#00ffc8] text-sm sm:text-base">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="title" className="text-sm font-medium text-slate-300">
             Título do Projeto *
           </Label>
           <Input
@@ -220,83 +220,83 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ex: Sistema de Gerenciamento"
-            className="bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 h-10 sm:h-11 text-sm sm:text-base"
+            className="h-11 bg-slate-950/50 border-slate-700/50 focus:border-[#00ffc8] focus:ring-2 focus:ring-[#00ffc8]/20 text-white placeholder:text-slate-500 rounded-lg transition-all"
             required
           />
         </div>
 
-        <div className="space-y-1.5 sm:space-y-2">
-          <Label htmlFor="category" className="text-[#00ffc8] text-sm sm:text-base">
+        <div className="space-y-2">
+          <Label htmlFor="category" className="text-sm font-medium text-slate-300">
             Categoria *
           </Label>
           <select
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 sm:py-2.5 bg-slate-950/50 border border-slate-700 rounded-md focus:border-[#00ffc8] focus:ring-2 focus:ring-[#00ffc8]/20 outline-none transition-all text-white text-sm sm:text-base h-10 sm:h-11"
+            className="w-full h-11 px-4 bg-slate-950/50 border border-slate-700/50 rounded-lg focus:border-[#00ffc8] focus:ring-2 focus:ring-[#00ffc8]/20 outline-none transition-all text-white"
             required
           >
-            <option value="">Selecione...</option>
-            <option value="web">🌐 Web</option>
-            <option value="backend">⚙️ Backend</option>
-            <option value="mobile">📱 Mobile</option>
-            <option value="arduino">🤖 Arduino</option>
-            <option value="projeto">📂 Projeto</option>
+            <option value="">Selecione uma categoria</option>
+            <option value="web">Web Application</option>
+            <option value="backend">Backend/API</option>
+            <option value="mobile">Mobile App</option>
+            <option value="arduino">IoT/Arduino</option>
+            <option value="projeto">Outro Projeto</option>
           </select>
         </div>
       </div>
 
       {/* Descrição */}
-      <div className="space-y-1.5 sm:space-y-2">
-        <Label htmlFor="description" className="text-[#00ffc8] text-sm sm:text-base">
-          Descrição *
+      <div className="space-y-2">
+        <Label htmlFor="description" className="text-sm font-medium text-slate-300">
+          Descrição do Projeto *
         </Label>
         <Textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Descreva seu projeto..."
-          className="bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 min-h-[100px] sm:min-h-[120px] text-sm sm:text-base"
+          placeholder="Descreva as principais funcionalidades e objetivos do projeto..."
+          className="bg-slate-950/50 border-slate-700/50 focus:border-[#00ffc8] focus:ring-2 focus:ring-[#00ffc8]/20 min-h-[120px] text-white placeholder:text-slate-500 rounded-lg resize-none transition-all"
           required
         />
       </div>
 
       {/* Tecnologias */}
-      <div className="space-y-1.5 sm:space-y-2">
-        <Label className="text-[#00ffc8] text-sm sm:text-base">Tecnologias</Label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium text-slate-300">Tecnologias Utilizadas</Label>
         <div className="flex gap-2">
           <Input
             value={techInput}
             onChange={(e) => setTechInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTech())}
-            placeholder="Ex: React, Node.js"
-            className="bg-slate-950/50 border-slate-700 focus:border-[#00ffc8] focus:ring-[#00ffc8]/20 h-10 sm:h-11 text-sm sm:text-base"
+            placeholder="Digite uma tecnologia e pressione Enter"
+            className="h-11 bg-slate-950/50 border-slate-700/50 focus:border-[#00ffc8] focus:ring-2 focus:ring-[#00ffc8]/20 text-white placeholder:text-slate-500 rounded-lg transition-all"
           />
           <Button
             type="button"
             onClick={handleAddTech}
-            className="bg-[#00ffc8] hover:bg-[#00e6b0] text-slate-950 h-10 sm:h-11 px-3 sm:px-4"
+            className="h-11 px-4 bg-[#00ffc8]/10 hover:bg-[#00ffc8]/20 text-[#00ffc8] border border-[#00ffc8]/20 rounded-lg transition-all"
           >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <Plus className="w-5 h-5" />
           </Button>
         </div>
         
         {techList.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+          <div className="flex flex-wrap gap-2 mt-3 p-3 bg-slate-900/50 rounded-lg border border-slate-800/50">
             {techList.map((tech) => (
               <motion.div
                 key={tech}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#00ffc8]/10 border border-[#00ffc8] text-[#00ffc8] px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm"
+                className="inline-flex items-center gap-2 bg-slate-800/70 border border-slate-700/50 text-slate-200 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
               >
                 <span>{tech}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveTech(tech)}
-                  className="hover:text-red-400 transition-colors"
+                  className="text-slate-400 hover:text-red-400 transition-colors"
                 >
-                  <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </motion.div>
             ))}
@@ -305,9 +305,9 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
       </div>
 
       {/* Upload de Imagens */}
-      <div className="space-y-1.5 sm:space-y-2">
-        <Label className="text-[#00ffc8] text-sm sm:text-base">🖼️ Imagens</Label>
-        <div className="border-2 border-dashed border-slate-700 hover:border-[#00ffc8] rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 text-center transition-all cursor-pointer bg-slate-950/30">
+      <div className="space-y-2">
+        <Label className="text-sm font-medium text-slate-300">Imagens do Projeto</Label>
+        <div className="border-2 border-dashed border-slate-700/50 hover:border-[#00ffc8]/50 rounded-xl p-8 text-center transition-all cursor-pointer bg-slate-950/30 hover:bg-slate-950/50">
           <input
             type="file"
             accept="image/*"
@@ -317,33 +317,35 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
             id="image-upload"
           />
           <label htmlFor="image-upload" className="cursor-pointer">
-            <Upload className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto mb-2 sm:mb-3 text-slate-500" />
-            <p className="text-slate-400 text-xs sm:text-sm">
-              Clique ou arraste imagens
-            </p>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
+              <Upload className="w-8 h-8 text-slate-500" />
+            </div>
+            <p className="text-slate-300 font-medium mb-1">Clique para selecionar imagens</p>
+            <p className="text-xs text-slate-500">ou arraste e solte aqui</p>
           </label>
         </div>
 
         {selectedImages.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 mt-3 sm:mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/50">
             {selectedImages.map((file, index) => (
               <motion.div
                 key={index}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="relative aspect-square rounded-lg overflow-hidden border border-slate-700 group"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="relative aspect-square rounded-lg overflow-hidden border border-slate-700/50 group hover:border-[#00ffc8]/30 transition-colors"
               >
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  className="absolute top-2 right-2 w-7 h-7 bg-red-500/90 hover:bg-red-500 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
                 >
-                  <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <X className="w-4 h-4" />
                 </button>
               </motion.div>
             ))}
@@ -352,12 +354,12 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
       </div>
 
       {/* Botões */}
-      <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
+      <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-slate-800/50">
         <Button
           type="button"
           onClick={onCancel}
           variant="outline"
-          className="w-full sm:w-auto border-slate-700 hover:bg-slate-800 h-10 sm:h-11"
+          className="h-12 border-slate-700/50 hover:bg-slate-800/50 text-slate-300"
         >
           Cancelar
         </Button>
@@ -365,15 +367,15 @@ export function AdminProjectForm({ editingProject, onSuccess, onCancel }: AdminP
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold py-5 sm:py-6 rounded-lg sm:rounded-xl transition-all hover:shadow-lg hover:shadow-[#00ffc8]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 h-12 bg-gradient-to-r from-[#00ffc8] to-[#00b8ff] hover:from-[#00e6b0] hover:to-[#00a0e6] text-slate-950 font-bold rounded-xl shadow-lg shadow-[#00ffc8]/20 hover:shadow-[#00ffc8]/30 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isSubmitting ? (
-            <span className="flex items-center gap-2 text-sm sm:text-base">
-              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-              {editingProject ? 'Atualizando...' : 'Adicionando...'}
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              {editingProject ? 'Atualizando...' : 'Salvando...'}
             </span>
           ) : (
-            <span className="text-sm sm:text-base">{editingProject ? '✅ Atualizar' : '➕ Adicionar'}</span>
+            <span>{editingProject ? 'Atualizar Projeto' : 'Adicionar Projeto'}</span>
           )}
         </Button>
       </div>
