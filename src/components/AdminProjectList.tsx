@@ -47,7 +47,7 @@ export function AdminProjectList({ projects, onEdit, onDelete }: AdminProjectLis
             return (
           <div className="flex flex-row gap-4 p-4 items-start">
             {/* Image */}
-            <div className="relative w-28 h-28 sm:w-40 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
+            <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
               {thumbnailUrl ? (
                 <>
                   <img
