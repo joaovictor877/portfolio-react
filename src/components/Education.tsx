@@ -7,7 +7,7 @@ const education = [
     institution: 'Senac Santo Amaro',
     period: '2021 - 2023',
     status: 'Concluído',
-    description: 'Formação técnica em Tecnologia da Informação com foco em desenvolvimento e infraestrutura.',
+    description: 'Formação técnica em Tecnologia da Informação com foco em desenvolvimento e redes de computadores.',
     color: 'from-cyan-500 to-blue-500'
   },
   {
@@ -15,7 +15,7 @@ const education = [
     institution: 'Senac Santo Amaro',
     period: '2024 - 2028',
     status: 'Cursando 5º semestre',
-    description: 'Graduação em Engenharia de Computação com ênfase em desenvolvimento de software e sistemas.',
+    description: 'Graduação em Engenharia de Computação.',
     color: 'from-blue-500 to-indigo-500'
   }
 ];
