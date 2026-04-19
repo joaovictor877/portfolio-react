@@ -14,7 +14,7 @@ const education = [
     degree: 'Engenharia de Computação',
     institution: 'Senac Santo Amaro',
     period: '2024 - 2028',
-    status: 'Cursando 4º semestre',
+    status: 'Cursando 5º semestre',
     description: 'Graduação em Engenharia de Computação com ênfase em desenvolvimento de software e sistemas.',
     color: 'from-blue-500 to-indigo-500'
   }
