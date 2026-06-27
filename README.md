@@ -35,7 +35,7 @@
 
   ## Rotas importantes
   - `/` página principal (React)
-  - `/login` página de login (Firebase Auth)
+  - `/login` página de login 
   - `/admin` painel para gerenciar projetos
 
   ## Problemas comuns
